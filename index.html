@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODO Dashboard - 54 Aufgaben</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    
+    // Alle 54 Tasks als komprimierte Version
+    const tasks = [{"id":"t001","title":"Heißluftfriteuse vs. Mikrowelle","desc":"Entscheidung: Heißluftfriteuse kaufen?","cat":"Haushalt","effort":2,"complex":"niedrig","meaning":8,"feasible":9,"status":"zurückgestellt","progress":0,"next":"In 2 Monaten prüfen"},{"id":"t002","title":"Uni-Unterlagen strukturiert ablegen","desc":"Studienunterlagen hochladen, interaktives Lernen","cat":"Lernen","effort":8,"complex":"mittel","meaning":9,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Unterlagen hochladen"},{"id":"t003","title":"Körperanalysewaage + Training","desc":"Waage mit App, <150€","cat":"Fitness","effort":5,"complex":"mittel","meaning":10,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Modelle vergleichen"},{"id":"t004","title":"Wohnung entmüllen","desc":"Minimalistischer leben","cat":"Organisation","effort":20,"complex":"mittel","meaning":8,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Raum-Liste erstellen"},{"id":"t005","title":"Nationalmannschaftstrikot kaufen?","desc":"Kaufentscheidung","cat":"Shopping","effort":0.5,"complex":"niedrig","meaning":3,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Preis checken"},{"id":"t006","title":"Rasier-Reminder","desc":"Regelmäßige Erinnerung","cat":"Selbstpflege","effort":0.25,"complex":"niedrig","meaning":4,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Rhythmus definieren"},{"id":"t007","title":"Haarconditioner-Reminder","desc":"Nicht täglich nutzen","cat":"Selbstpflege","effort":0.25,"complex":"niedrig","meaning":4,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Frequenz recherchieren"},{"id":"t008","title":"Kalender-System einrichten","desc":"Seit 2,5 Wochen keinen Kalender","cat":"Organisation","effort":3,"complex":"niedrig","meaning":9,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Tool wählen"},{"id":"t009","title":"Spam-Mails blockieren","desc":"Inbox Zero erreichen","cat":"Digital","effort":4,"complex":"mittel","meaning":7,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Gmail Filter"},{"id":"t010","title":"WhatsApp aufräumen","desc":"Zu viele Chats","cat":"Digital","effort":2,"complex":"niedrig","meaning":6,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Chats archivieren"},{"id":"t011","title":"Morning Briefing automatisieren","desc":"RSS → Claude → Notion","cat":"Automatisierung","effort":6,"complex":"hoch","meaning":8,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Make.com Setup"},{"id":"t012","title":"Cloud-Backup-Strategie","desc":"Fort Knox Datensicherung","cat":"Sicherheit","effort":8,"complex":"hoch","meaning":9,"feasible":6,"status":"nicht gestartet","progress":0,"next":"3-2-1 Regel recherchieren"},{"id":"t013","title":"Notion Workspace strukturieren","desc":"Alles in Notion","cat":"Digital","effort":10,"complex":"mittel","meaning":8,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Templates recherchieren"},{"id":"t014","title":"Chessable Openings lernen","desc":"Repertoire aufbauen","cat":"Hobby","effort":50,"complex":"mittel","meaning":6,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Kurs auswählen"},{"id":"t015","title":"Spanisch-Lernroutine","desc":"Täglich 20 Min","cat":"Lernen","effort":100,"complex":"mittel","meaning":7,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Lernplan erstellen"},{"id":"t016","title":"Fitness-Tracker optimieren","desc":"Apple Watch voll nutzen","cat":"Fitness","effort":3,"complex":"niedrig","meaning":7,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Health Export"},{"id":"t017","title":"Meal Prep Sonntags","desc":"Für ganze Woche vorkochen","cat":"Haushalt","effort":15,"complex":"mittel","meaning":8,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Rezepte sammeln"},{"id":"t018","title":"Home-Gym einrichten","desc":"Hanteln, Matte, Bands","cat":"Fitness","effort":5,"complex":"niedrig","meaning":8,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Equipment-Liste"},{"id":"t019","title":"Morgenroutine optimieren","desc":"Feste Routine etablieren","cat":"Fitness","effort":2,"complex":"niedrig","meaning":9,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Routine planen"},{"id":"t020","title":"Abendroutine etablieren","desc":"Früher schlafen","cat":"Fitness","effort":2,"complex":"niedrig","meaning":8,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Schlaf-Tracker"},{"id":"t021","title":"Steuererklärung 2025","desc":"Belege sammeln, ELSTER","cat":"Finanzen","effort":6,"complex":"mittel","meaning":9,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Belege sortieren"},{"id":"t022","title":"Hausarzt Check-up","desc":"Allgemeiner Gesundheitscheck","cat":"Fitness","effort":2,"complex":"niedrig","meaning":8,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Termin vereinbaren"},{"id":"t023","title":"Zahnarzt Prophylaxe","desc":"Zahnreinigung + Kontrolle","cat":"Fitness","effort":1.5,"complex":"niedrig","meaning":7,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Anrufen"},{"id":"t024","title":"Hautarzt Muttermal-Check","desc":"Hautkrebs-Vorsorge","cat":"Fitness","effort":1.5,"complex":"niedrig","meaning":8,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Praxis googeln"},{"id":"t025","title":"Versicherungen optimieren","desc":"BU, Haftpflicht, Rechtsschutz","cat":"Finanzen","effort":5,"complex":"mittel","meaning":8,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Liste erstellen"},{"id":"t026","title":"ETF-Sparplan optimieren","desc":"350€ monatlich, 4 ETFs","cat":"Finanzen","effort":3,"complex":"mittel","meaning":9,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Portfolio checken"},{"id":"t027","title":"Notgroschen aufbauen","desc":"10.000€ Notfallreserve","cat":"Finanzen","effort":1,"complex":"niedrig","meaning":9,"feasible":6,"status":"nicht gestartet","progress":0,"next":"Kontostand prüfen"},{"id":"t028","title":"Capsule Wardrobe","desc":"30-40 Teile total","cat":"Organisation","effort":8,"complex":"mittel","meaning":7,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Guides lesen"},{"id":"t029","title":"Schuhe ausmisten","desc":"Zu viele Schuhe","cat":"Organisation","effort":2,"complex":"niedrig","meaning":6,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Alle rausholen"},{"id":"t030","title":"Bücher digitalisieren","desc":"Physische Bücher vs Kindle","cat":"Organisation","effort":4,"complex":"niedrig","meaning":5,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Bücher durchgehen"},{"id":"t031","title":"Dokumente digitalisieren","desc":"Alle scannen","cat":"Digital","effort":6,"complex":"mittel","meaning":8,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Scanner-App testen"},{"id":"t032","title":"Passwort-Manager","desc":"1Password oder Bitwarden","cat":"Sicherheit","effort":4,"complex":"mittel","meaning":9,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Vergleich"},{"id":"t033","title":"2FA überall aktivieren","desc":"Zwei-Faktor-Auth","cat":"Sicherheit","effort":3,"complex":"niedrig","meaning":9,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Accounts identifizieren"},{"id":"t034","title":"LinkedIn aufpolieren","desc":"Profil aktualisieren","cat":"Karriere","effort":2,"complex":"niedrig","meaning":7,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Profil anschauen"},{"id":"t035","title":"XING löschen","desc":"Nutze nur LinkedIn","cat":"Digital","effort":0.5,"complex":"niedrig","meaning":3,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Einloggen"},{"id":"t036","title":"Urlaub 2026 planen","desc":"Sommer + Herbst","cat":"Hobby","effort":5,"complex":"mittel","meaning":8,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Urlaubstage zählen"},{"id":"t037","title":"Führerschein-Auffrischung","desc":"Fahrstunden nehmen","cat":"Entwicklung","effort":10,"complex":"mittel","meaning":6,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Fahrschulen googeln"},{"id":"t038","title":"Auto kaufen?","desc":"Kosten vs Nutzen","cat":"Finanzen","effort":4,"complex":"mittel","meaning":6,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Kosten kalkulieren"},{"id":"t039","title":"Zeiterfassung RescueTime","desc":"Wo geht meine Zeit hin?","cat":"Produktivität","effort":2,"complex":"niedrig","meaning":7,"feasible":9,"status":"nicht gestartet","progress":0,"next":"App installieren"},{"id":"t040","title":"Pomodoro-Technik","desc":"25 Min Fokus","cat":"Produktivität","effort":1,"complex":"niedrig","meaning":7,"feasible":10,"status":"nicht gestartet","progress":0,"next":"App installieren"},{"id":"t041","title":"Newsletter abbestellen","desc":"Inbox-Detox","cat":"Digital","effort":1,"complex":"niedrig","meaning":6,"feasible":10,"status":"nicht gestartet","progress":0,"next":"Posteingang durchgehen"},{"id":"t042","title":"Social Media reduzieren","desc":"Max 30 Min/Tag","cat":"Entwicklung","effort":1,"complex":"niedrig","meaning":8,"feasible":6,"status":"nicht gestartet","progress":0,"next":"Screen Time analysieren"},{"id":"t043","title":"Leseliste abarbeiten","desc":"1 Buch pro Monat","cat":"Hobby","effort":50,"complex":"niedrig","meaning":7,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Liste erstellen"},{"id":"t044","title":"Podcast-Routine","desc":"3-5 feste Podcasts","cat":"Hobby","effort":2,"complex":"niedrig","meaning":6,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Recherchieren"},{"id":"t045","title":"Fotografieren lernen","desc":"Belichtung, Blende, ISO","cat":"Hobby","effort":10,"complex":"mittel","meaning":5,"feasible":7,"status":"nicht gestartet","progress":0,"next":"Tutorial suchen"},{"id":"t046","title":"Instrument wieder aufnehmen","desc":"Klavier?","cat":"Hobby","effort":50,"complex":"mittel","meaning":6,"feasible":5,"status":"nicht gestartet","progress":0,"next":"Entscheiden"},{"id":"t047","title":"Meditation Headspace","desc":"Täglich 10 Min","cat":"Fitness","effort":5,"complex":"niedrig","meaning":7,"feasible":8,"status":"nicht gestartet","progress":0,"next":"App installieren"},{"id":"t048","title":"Journaling-Routine","desc":"Abends 5 Min","cat":"Entwicklung","effort":3,"complex":"niedrig","meaning":8,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Format wählen"},{"id":"t049","title":"Dankbarkeitstagebuch","desc":"3 Dinge täglich","cat":"Entwicklung","effort":2,"complex":"niedrig","meaning":7,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Notizbuch kaufen"},{"id":"t050","title":"Freunde kontaktieren","desc":"Alte Freunde treffen","cat":"Soziales","effort":5,"complex":"niedrig","meaning":9,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Liste erstellen"},{"id":"t051","title":"Familien-Kontakt","desc":"Regelmäßiger Kontakt","cat":"Soziales","effort":2,"complex":"niedrig","meaning":9,"feasible":9,"status":"nicht gestartet","progress":0,"next":"Telefon-Termine"},{"id":"t052","title":"Dating-Apps aufräumen","desc":"Profil überarbeiten","cat":"Soziales","effort":3,"complex":"niedrig","meaning":7,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Profil reviewen"},{"id":"t053","title":"Volunteering/Ehrenamt","desc":"1x pro Monat","cat":"Entwicklung","effort":20,"complex":"mittel","meaning":8,"feasible":6,"status":"nicht gestartet","progress":0,"next":"Organisationen recherchieren"},{"id":"t054","title":"Umzug Schweiz vorbereiten","desc":"Ab April 1 Monat, dann wöchentlich","cat":"Karriere","effort":15,"complex":"hoch","meaning":10,"feasible":8,"status":"nicht gestartet","progress":0,"next":"Wohnung suchen"}];
+
+    function App() {
+      const [allTasks, setAllTasks] = useState(tasks);
+      const [filter, setFilter] = useState('Alle');
+      const [sort, setSort] = useState('priority');
+      const [selected, setSelected] = useState(null);
+      
+      const cats = ['Alle', ...new Set(tasks.map(t => t.cat))];
+      
+      const calc = (t) => {
+        const cf = {'niedrig':1,'mittel':1.5,'hoch':2.5}[t.complex];
+        const ef = t.effort <= 1 ? 0.8 : t.effort <= 5 ? 1 : 1.3;
+        return Math.round((t.meaning * 5 * 1.2 * t.feasible) / (cf * ef * 10));
+      };
+      
+      const filtered = allTasks
+        .filter(t => filter === 'Alle' || t.cat === filter)
+        .sort((a,b) => sort === 'priority' ? calc(b)-calc(a) : sort === 'effort' ? a.effort-b.effort : b.meaning-a.meaning);
+      
+      const stats = {
+        total: allTasks.length,
+        notStarted: allTasks.filter(t => t.status === 'nicht gestartet').length,
+        done: allTasks.filter(t => t.status === 'erledigt').length
+      };
+      
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                📋 TODO Dashboard
+              </h1>
+              <p className="text-gray-600">54 Aufgaben</p>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-white rounded-xl p-4 shadow">
+                <div className="text-2xl font-bold">{stats.total}</div>
+                <div className="text-sm text-gray-600">Gesamt</div>
+              </div>
+              <div className="bg-white rounded-xl p-4 shadow">
+                <div className="text-2xl font-bold text-red-600">{stats.notStarted}</div>
+                <div className="text-sm text-gray-600">Nicht gestartet</div>
+              </div>
+              <div className="bg-white rounded-xl p-4 shadow">
+                <div className="text-2xl font-bold text-emerald-600">{stats.done}</div>
+                <div className="text-sm text-gray-600">Erledigt</div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-xl p-4 mb-6 shadow">
+              <div className="grid grid-cols-2 gap-4">
+                <select value={filter} onChange={e => setFilter(e.target.value)} className="px-4 py-2 border rounded-lg">
+                  {cats.map(c => <option key={c}>{c}</option>)}
+                </select>
+                <select value={sort} onChange={e => setSort(e.target.value)} className="px-4 py-2 border rounded-lg">
+                  <option value="priority">Priorität</option>
+                  <option value="effort">Aufwand</option>
+                  <option value="meaningfulness">Sinnhaftigkeit</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filtered.map(t => (
+                <div key={t.id} onClick={() => setSelected(t)} className="bg-white rounded-xl p-4 shadow hover:shadow-lg cursor-pointer transition">
+                  <div className="flex justify-between mb-2">
+                    <h3 className="font-bold text-lg">{t.title}</h3>
+                    <div className="text-2xl font-bold text-blue-600">{calc(t)}</div>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">{t.desc}</p>
+                  <div className="flex gap-2 flex-wrap">
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded">{t.cat}</span>
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded">⏱️ {t.effort}h</span>
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded">💡 {t.meaning}/10</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {selected && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
+                <div className="bg-white rounded-2xl p-6 max-w-2xl w-full" onClick={e => e.stopPropagation()}>
+                  <h2 className="text-2xl font-bold mb-4">{selected.title}</h2>
+                  <p className="mb-4">{selected.desc}</p>
+                  <div className="bg-gray-50 rounded p-3 mb-4">
+                    <div className="text-sm font-semibold text-gray-600 mb-1">Nächster Schritt:</div>
+                    <div>{selected.next}</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div><span className="font-semibold">Kategorie:</span> {selected.cat}</div>
+                    <div><span className="font-semibold">Aufwand:</span> {selected.effort}h</div>
+                    <div><span className="font-semibold">Komplexität:</span> {selected.complex}</div>
+                    <div><span className="font-semibold">Sinnhaftigkeit:</span> {selected.meaning}/10</div>
+                  </div>
+                  <button onClick={() => setSelected(null)} className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Schließen
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+    
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
